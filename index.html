@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Examination Display</title>
+<style>
+:root{--bg:#121212;--heading:#ffbf00;--top:#00a3a7;--start:#60ff60;--end:#FA8128;--time:#fff;--divider:#a9bfb5;--keybg:#006b69;--keytext:#d8d5c9;--font:'Franklin Gothic Medium',sans-serif;--headingSize:1;--labelSize:1;--timeSize:1;--keySize:1}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:var(--bg);color:var(--time);font-family:var(--font);overflow:hidden}.stage{height:100dvh;width:100%;padding:0 2.1vw 2vh;display:flex;flex-direction:column;justify-content:flex-start}.header{height:25%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:.99;font-weight:900;overflow:hidden}.header .top{color:var(--top);font-size:calc(clamp(20px,3.15vw,58px)*var(--headingSize));white-space:nowrap}.header .code{color:var(--heading);font-size:calc(clamp(26px,4.25vw,78px)*var(--headingSize));white-space:nowrap}.header .subject{color:var(--heading);font-size:calc(clamp(26px,4.25vw,78px)*var(--headingSize));white-space:nowrap}.keyheader{height:37%;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;text-align:center;gap:1.5vh;padding-top:.5vh}.keytitle{color:var(--heading);font-size:calc(clamp(25px,4.2vw,78px)*var(--headingSize));font-weight:900;line-height:1.05}.keyvalue{background:var(--keybg);color:var(--keytext);height:69%;display:flex;align-items:center;justify-content:center;font-size:calc(clamp(40px,12vw,230px)*var(--keySize));font-weight:900;font-family:Consolas,'Courier New',monospace;white-space:nowrap;overflow:hidden;padding:0 1vw}.divider{height:6px;background:var(--divider);flex:none;margin:0 0 1.8vh}.times{flex:1;display:grid;grid-template-rows:1fr 1fr;min-height:0}.time-row{display:grid;grid-template-columns:51% 49%;align-items:center;min-height:0}.time-label{font-size:calc(clamp(54px,14vw,270px)*var(--labelSize));font-weight:900;line-height:.9;white-space:nowrap;letter-spacing:-.025em}.time-label.start{color:var(--start)}.time-label.end{color:var(--end)}.time-value{font-size:calc(clamp(58px,14.2vw,270px)*var(--timeSize));font-weight:500;line-height:.9;white-space:nowrap;letter-spacing:-.025em;font-variant-numeric:tabular-nums;display:flex;justify-content:flex-start;align-items:center;gap:0;padding-right:0}.time-value span{display:inline-block}.time-value .colon{font-size:.82em;margin:0 .025em;transform:translateY(-.035em)}.time-value{font-size:calc(clamp(58px,13.1vw,250px)*var(--timeSize))}.toolbar{position:fixed;top:9px;right:10px;z-index:20;display:flex;gap:5px;opacity:.32;transition:opacity .15s}.toolbar:hover,.toolbar:focus-within{opacity:1}.iconbtn{width:35px;height:35px;display:grid;place-items:center;background:#343a3a;border:1px solid #667070;border-radius:8px;color:#fff;cursor:pointer}.iconbtn:hover{background:#526363}.iconbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.panel{position:fixed;z-index:30;right:12px;top:54px;width:min(380px,calc(100vw - 24px));max-height:calc(100dvh - 68px);overflow:auto;background:#202526;color:#f7f8f8;border:1px solid #526061;border-radius:12px;box-shadow:0 14px 55px #000b;padding:18px;font-family:Arial,sans-serif;font-size:14px}.panel[hidden],[hidden]{display:none!important}.panel h2{margin:0 0 15px;font-size:18px}.panel label{display:block;margin:10px 0 5px;font-weight:600}.panel input:not([type=checkbox]):not([type=color]),.panel select{width:100%;background:#121718;border:1px solid #5b696a;color:white;border-radius:7px;padding:10px;font-size:14px}.panel input[type=color]{width:100%;height:33px;border:0;background:transparent;cursor:pointer}.panel input[type=range]{width:100%;accent-color:#24bbbb}.panel .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}.panel .switch{display:flex;align-items:center;justify-content:space-between;margin:12px 0}.panel .switch label{margin:0}.panel input[type=checkbox]{width:19px;height:19px;accent-color:#00a3a7}.panel button.action{background:#087d80;border:0;border-radius:7px;color:white;padding:10px 13px;cursor:pointer;font-weight:bold}.panel button.secondary{background:#414c4d}.panel .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.panel .hint{font-size:12px;line-height:1.5;color:#bbc6c6}.panel .warning{color:#ffd08b}.panel .status{padding:10px;border-radius:7px;background:#103b3a;color:#c6ffed;font-size:13px;line-height:1.4}.panel .section{border-top:1px solid #465050;margin-top:16px;padding-top:10px}.panel .colorrow{display:grid;grid-template-columns:1fr 68px;align-items:center;gap:8px}.panel .colorrow label{margin:5px 0}.panel .colorrow input{height:30px}.panel .rangehead{display:flex;justify-content:space-between}.panel .rangehead label{margin:8px 0 0}.toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#2c3839;color:white;padding:9px 14px;border-radius:8px;font:13px Arial,sans-serif;z-index:40;pointer-events:none}.projected .toolbar{display:none}.projected:not(:fullscreen) #projectFull{display:grid!important}.projected:fullscreen #projectFull{display:none!important}#projectFull{position:fixed;top:10px;right:10px;z-index:50;opacity:.3}#projectFull:hover{opacity:1}.projected .stage{cursor:default}.projected{--projectionBoost:1.08}.projected .header .top{font-size:calc(clamp(20px,3.15vw,58px)*var(--headingSize)*var(--projectionBoost))}.projected .header .code,.projected .header .subject{font-size:calc(clamp(26px,4.25vw,78px)*var(--headingSize)*var(--projectionBoost))}.projected .keytitle{font-size:calc(clamp(25px,4.2vw,78px)*var(--headingSize)*var(--projectionBoost))}.projected .keyvalue{font-size:calc(clamp(40px,12vw,230px)*var(--keySize)*var(--projectionBoost))}.projected .time-label{font-size:calc(clamp(54px,14vw,270px)*var(--labelSize)*var(--projectionBoost))}.projected .time-value{font-size:calc(clamp(58px,13.1vw,250px)*var(--timeSize)*var(--projectionBoost))}.setup-overlay{position:fixed;inset:0;z-index:80;background:#000a;display:grid;place-items:center;padding:18px;font:14px/1.55 "Segoe UI",Arial,sans-serif}.setup-card{width:min(540px,100%);max-height:94dvh;overflow:auto;background:#202729;border:1px solid #607072;border-radius:18px;padding:26px;color:#f6f8f8;box-shadow:0 24px 90px #000c}.setup-card h2{margin:0 0 8px;font-size:23px}.setup-card p{color:#c4d0d0}.setup-card ol{padding-left:23px}.setup-card li{padding:5px 0}.setup-card kbd{background:#364244;padding:3px 6px;border-radius:5px;border:1px solid #5b686a}.setup-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;margin-top:20px}.setup-actions button{border:0;border-radius:9px;padding:11px 15px;cursor:pointer;color:white;background:#087d80;font-weight:700}.setup-actions button.secondary{background:#414d4f}.presenter-status{font-size:12px;color:#b6d8d5;margin-top:12px}.projected .project-help{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);padding:6px 12px;border-radius:9px;background:#263233d9;color:#e0e8e8;font:12px "Segoe UI",Arial,sans-serif;opacity:.55;transition:opacity .2s;z-index:25;white-space:nowrap}.projected:fullscreen .project-help{opacity:0;pointer-events:none}.projected .project-help:hover{opacity:1}.projected .toolbar{display:none}@media(max-width:650px){.header{height:25%}.time-label{font-size:calc(12vw*var(--labelSize))}.time-value{font-size:calc(12vw*var(--timeSize))}.keyvalue{font-size:calc(10vw*var(--keySize))}}
+
+/* Dual-column presentation and independent remarks typography */
+.display-layout{height:100dvh;width:100%;display:flex;overflow:hidden}
+.display-layout .stage{flex:1;min-width:0;width:auto}
+.remarks-pane{width:50%;min-width:0;background:#ADD8E6;color:#102634;display:flex;flex-direction:column;padding:clamp(15px,2.5vw,48px);overflow:hidden;border-left:3px solid #729eaf}
+.remarks-heading{font-family:var(--font);font-weight:900;font-size:clamp(20px,2.4vw,48px);border-bottom:3px solid #537b8e;padding-bottom:.6em;letter-spacing:.025em;flex:none}
+.remarks-content{white-space:pre-wrap;overflow-wrap:anywhere;overflow:auto;min-height:0;flex:1;padding-top:1em;line-height:1.35;font-size:calc(clamp(18px,2.25vw,46px)*var(--remarksSize));font-weight:500}
+.display-layout.split .stage{width:50%;flex:none;padding:0 1.3vw 1.5vh}
+.display-layout.split .header{height:27%}
+.display-layout.split .header .top{font-size:calc(clamp(14px,1.75vw,35px)*var(--headingSize))}
+.display-layout.split .header .code,.display-layout.split .header .subject{font-size:calc(clamp(17px,2.1vw,42px)*var(--headingSize))}
+.display-layout.split .time-row{grid-template-columns:47% 53%}
+.display-layout.split .time-label{font-size:calc(clamp(28px,6.4vw,128px)*var(--labelSize))}
+.display-layout.split .time-value{font-size:calc(clamp(28px,6.2vw,124px)*var(--timeSize))}
+.display-layout.split .keyheader{height:38%}
+.keyheader .key-subject{color:var(--heading);font-weight:900;line-height:1.04;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;gap:.12em}
+.keyheader .key-subject .code,.keyheader .key-subject .subject{font-size:calc(clamp(18px,2.65vw,50px)*var(--headingSize));white-space:nowrap;max-width:100%}
+.keyheader .keytitle{font-size:calc(clamp(20px,3.15vw,60px)*var(--headingSize))}
+.keyheader .keyvalue{height:auto;flex:1;min-height:0;font-size:calc(clamp(35px,8vw,155px)*var(--keySize))}
+.display-layout.split .keyheader .key-subject .code,.display-layout.split .keyheader .key-subject .subject{font-size:calc(clamp(13px,1.65vw,34px)*var(--headingSize))}
+.display-layout.split .keyheader .keytitle{font-size:calc(clamp(16px,2.05vw,40px)*var(--headingSize))}
+.display-layout.split .keyheader .keyvalue{font-size:calc(clamp(23px,4.8vw,95px)*var(--keySize))}
+.projected .keyheader .key-subject .code,.projected .keyheader .key-subject .subject{font-size:calc(clamp(18px,2.65vw,50px)*var(--headingSize)*var(--projectionBoost))}
+.projected .keyheader .keytitle{font-size:calc(clamp(20px,3.15vw,60px)*var(--headingSize)*var(--projectionBoost))}
+.projected .keyheader .keyvalue{font-size:calc(clamp(35px,8vw,155px)*var(--keySize)*var(--projectionBoost))}
+.projected .display-layout.split .header .top{font-size:calc(clamp(14px,1.75vw,35px)*var(--headingSize)*var(--projectionBoost))}
+.projected .display-layout.split .header .code,.projected .display-layout.split .header .subject{font-size:calc(clamp(17px,2.1vw,42px)*var(--headingSize)*var(--projectionBoost))}
+.projected .display-layout.split .time-label{font-size:calc(clamp(28px,6.4vw,128px)*var(--labelSize)*var(--projectionBoost))}
+.projected .display-layout.split .time-value{font-size:calc(clamp(28px,6.2vw,124px)*var(--timeSize)*var(--projectionBoost))}
+.projected .display-layout.split .keyheader .key-subject .code,.projected .display-layout.split .keyheader .key-subject .subject{font-size:calc(clamp(13px,1.65vw,34px)*var(--headingSize)*var(--projectionBoost))}
+.projected .display-layout.split .keyheader .keytitle{font-size:calc(clamp(16px,2.05vw,40px)*var(--headingSize)*var(--projectionBoost))}
+.projected .display-layout.split .keyheader .keyvalue{font-size:calc(clamp(23px,4.8vw,95px)*var(--keySize)*var(--projectionBoost))}
+.panel textarea{width:100%;min-height:145px;resize:vertical;background:#121718;border:1px solid #5b696a;color:white;border-radius:9px;padding:12px;font:14px/1.5 Arial,sans-serif}
+.panel .reveal-switch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0;padding:14px 12px;border:1px solid #516164;border-radius:13px;background:#303a3b;cursor:pointer;transition:background .18s,border-color .18s;color:#f3f6f6}
+.panel .reveal-switch.enabled{background:#176b44;border-color:#44d48a;box-shadow:inset 0 0 0 1px #389b6a}
+.panel .reveal-copy{display:flex;flex-direction:column;gap:4px}
+.panel .reveal-copy strong{font-size:14px}.panel .reveal-copy small{font-size:11px;font-weight:400;color:#c8d3d3;line-height:1.35}
+.panel .reveal-switch.enabled .reveal-copy small{color:#e1ffec}
+.panel .toggle-input{position:absolute;opacity:0;width:1px;height:1px}
+.panel .toggle-track{flex:none;width:47px;height:27px;border-radius:50px;background:#697678;position:relative;transition:background .2s;box-shadow:inset 0 1px 4px #0004}
+.panel .toggle-track:after{content:'';position:absolute;left:3px;top:3px;width:21px;height:21px;border-radius:50%;background:white;box-shadow:0 2px 5px #0004;transition:transform .2s}
+.panel .toggle-input:checked+.toggle-track{background:#37d984}.panel .toggle-input:checked+.toggle-track:after{transform:translateX(20px)}
+.panel .reveal-switch:focus-within{outline:2px solid #9bdff2;outline-offset:2px}
+@media(max-width:700px){.remarks-pane{padding:12px}.remarks-heading{font-size:clamp(14px,3vw,24px)}.remarks-content{font-size:calc(clamp(14px,2.7vw,24px)*var(--remarksSize))}}
+/* Private centre-key entry: clear, prominent, fixed-width typography. */
+.panel #keyInput{
+  font-family:Consolas,'Courier New',monospace;
+  font-size:clamp(20px,2.1vw,26px);
+  font-weight:700;
+  text-align:center;
+  letter-spacing:.035em;
+  padding:14px 12px;
+  min-height:58px;
+}
+.panel #keyInput::placeholder{font-family:Consolas,'Courier New',monospace;font-weight:400;letter-spacing:0;opacity:.65}
+
+/* Centre key layout: one subject line, prominent white title and larger code. */
+.keyheader{height:40%;gap:1.1vh}
+.keyheader .key-subject{flex-direction:row;flex-wrap:nowrap;gap:.28em;white-space:nowrap;overflow:hidden}
+.keyheader .key-subject .code,.keyheader .key-subject .subject{flex:0 1 auto;min-width:0;font-size:calc(clamp(16px,2.4vw,46px)*var(--headingSize));overflow:hidden;text-overflow:ellipsis}
+.keyheader .keytitle{color:#fff;font-size:calc(clamp(30px,4.1vw,82px)*var(--headingSize));line-height:1.03}
+.keyheader .keyvalue{font-size:calc(clamp(48px,10.2vw,205px)*var(--keySize));letter-spacing:-.035em}
+.display-layout.split .keyheader{height:40%}
+.display-layout.split .keyheader .key-subject .code,.display-layout.split .keyheader .key-subject .subject{font-size:calc(clamp(12px,1.45vw,29px)*var(--headingSize))}
+.display-layout.split .keyheader .keytitle{font-size:calc(clamp(21px,2.65vw,54px)*var(--headingSize))}
+.display-layout.split .keyheader .keyvalue{font-size:calc(clamp(30px,5.9vw,118px)*var(--keySize))}
+.projected .keyheader .key-subject .code,.projected .keyheader .key-subject .subject{font-size:calc(clamp(16px,2.4vw,46px)*var(--headingSize)*var(--projectionBoost))}
+.projected .keyheader .keytitle{font-size:calc(clamp(30px,4.1vw,82px)*var(--headingSize)*var(--projectionBoost))}
+.projected .keyheader .keyvalue{font-size:calc(clamp(48px,10.2vw,205px)*var(--keySize)*var(--projectionBoost))}
+.projected .display-layout.split .keyheader .key-subject .code,.projected .display-layout.split .keyheader .key-subject .subject{font-size:calc(clamp(12px,1.45vw,29px)*var(--headingSize)*var(--projectionBoost))}
+.projected .display-layout.split .keyheader .keytitle{font-size:calc(clamp(21px,2.65vw,54px)*var(--headingSize)*var(--projectionBoost))}
+.projected .display-layout.split .keyheader .keyvalue{font-size:calc(clamp(30px,5.9vw,118px)*var(--keySize)*var(--projectionBoost))}
+.keyheader .key-subject .subject-dash{color:var(--heading);font-weight:900;font-size:calc(clamp(16px,2.4vw,46px)*var(--headingSize));flex:none}.display-layout.split .keyheader .key-subject .subject-dash{font-size:calc(clamp(12px,1.45vw,29px)*var(--headingSize))}.projected .keyheader .key-subject .subject-dash{font-size:calc(clamp(16px,2.4vw,46px)*var(--headingSize)*var(--projectionBoost))}.projected .display-layout.split .keyheader .key-subject .subject-dash{font-size:calc(clamp(12px,1.45vw,29px)*var(--headingSize)*var(--projectionBoost))}
+/* Adaptive split layout: scale to the actual width of the left pane, not the whole TV. */
+.display-layout.split .stage{container-type:inline-size;display:flex;flex-direction:column;padding:1.4vh 1.4vw 2.5vh;gap:0}
+.display-layout.split .header{height:28%;flex:none;justify-content:center;gap:.35em;line-height:1.04}
+.display-layout.split .header .top{font-size:calc(clamp(15px,3.9cqw,36px)*var(--headingSize))}
+.display-layout.split .header .code,.display-layout.split .header .subject{font-size:calc(clamp(17px,4.8cqw,45px)*var(--headingSize))}
+.display-layout.split .divider{margin:0;flex:none}
+.display-layout.split .times{flex:1;min-height:0;display:grid;grid-template-rows:1fr 1fr;align-items:stretch}
+.display-layout.split .time-row{grid-template-columns:minmax(0,43%) minmax(0,57%);column-gap:0;min-width:0;align-items:center}
+.display-layout.split .time-label{font-size:calc(clamp(28px,13.7cqw,125px)*var(--labelSize));letter-spacing:-.035em;min-width:0}
+.display-layout.split .time-value{font-size:calc(clamp(28px,14.4cqw,130px)*var(--timeSize));letter-spacing:-.04em;min-width:0;white-space:nowrap}
+.projected .display-layout.split .header .top{font-size:calc(clamp(15px,3.9cqw,36px)*var(--headingSize)*var(--projectionBoost))}
+.projected .display-layout.split .header .code,.projected .display-layout.split .header .subject{font-size:calc(clamp(17px,4.8cqw,45px)*var(--headingSize)*var(--projectionBoost))}
+.projected .display-layout.split .time-label{font-size:calc(clamp(28px,13.7cqw,125px)*var(--labelSize)*var(--projectionBoost))}
+.projected .display-layout.split .time-value{font-size:calc(clamp(28px,14.4cqw,130px)*var(--timeSize)*var(--projectionBoost))}
+/* Key view uses a compact header, leaving meaningful room for start and end times. */
+.display-layout.split .keyheader{height:43%;flex:none;gap:1vh;padding-top:1vh}
+.display-layout.split .keyheader .key-subject .code,.display-layout.split .keyheader .key-subject .subject,.display-layout.split .keyheader .key-subject .subject-dash{font-size:calc(clamp(12px,3.15cqw,31px)*var(--headingSize))}
+.display-layout.split .keyheader .keytitle{font-size:calc(clamp(20px,5.4cqw,54px)*var(--headingSize))}
+.display-layout.split .keyheader .keyvalue{font-size:calc(clamp(30px,11.5cqw,118px)*var(--keySize))}
+.projected .display-layout.split .keyheader .key-subject .code,.projected .display-layout.split .keyheader .key-subject .subject,.projected .display-layout.split .keyheader .key-subject .subject-dash{font-size:calc(clamp(12px,3.15cqw,31px)*var(--headingSize)*var(--projectionBoost))}
+.projected .display-layout.split .keyheader .keytitle{font-size:calc(clamp(20px,5.4cqw,54px)*var(--headingSize)*var(--projectionBoost))}
+.projected .display-layout.split .keyheader .keyvalue{font-size:calc(clamp(30px,11.5cqw,118px)*var(--keySize)*var(--projectionBoost))}
+
+/* Presentation window: prevent accidental highlighting during double-click. */
+body.projected, body.projected * { -webkit-user-select: none !important; user-select: none !important; -webkit-touch-callout: none; }
+</style>
+</head>
+<body>
+<div class="display-layout" id="displayLayout"><main class="stage" aria-label="Examination information display">
+  <section id="standardHeader" class="header"><div class="top" id="viewTop"></div><div class="code" id="viewCode"></div><div class="subject" id="viewSubject"></div></section>
+  <section id="keyHeader" class="keyheader" hidden><div class="key-subject"><div class="code" id="keyCode"></div><span class="subject-dash" aria-hidden="true">—</span><div class="subject" id="keySubject"></div></div><div class="keytitle">EXAM CENTRE KEY</div><div class="keyvalue" id="viewKey"></div></section>
+  <div class="divider"></div>
+  <section class="times"><div class="time-row"><div class="time-label start">START</div><div class="time-value"><span id="startHour"></span><span class="colon">:</span><span id="startMinute"></span></div></div><div class="time-row"><div class="time-label end">END</div><div class="time-value"><span id="endHour"></span><span class="colon">:</span><span id="endMinute"></span></div></div></section>
+</main><aside class="remarks-pane" id="remarksPane" hidden><div class="remarks-heading" id="viewRemarksHeading"></div><div class="remarks-content" id="viewRemarks"></div></aside></div>
+<div id="toolbar" class="toolbar" aria-label="Display controls">
+<button class="iconbtn" id="editBtn" title="Edit examination information" aria-label="Edit examination information"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"/></svg></button>
+<button class="iconbtn" id="styleBtn" title="Appearance settings" aria-label="Appearance settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="7.5" cy="11" r="1"/><circle cx="11" cy="7" r="1"/><circle cx="16" cy="9" r="1"/><path d="M14 17c0-3 6-1 6-5"/></svg></button>
+<button class="iconbtn" id="presentBtn" title="Open presenter display" aria-label="Open presenter display"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="13" rx="1"/><path d="M12 16v5m-5 0h10m-9-9 3-3 2 2 3-4"/></svg></button>
+<button class="iconbtn" id="fullBtn" title="Toggle full screen" aria-label="Toggle full screen"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
+</div>
+<button id="projectFull" class="iconbtn" hidden title="Enter full screen" aria-label="Enter full screen"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
+<section class="panel" id="editPanel" hidden aria-label="Edit examination information">
+<h2>Examination information</h2>
+<label for="topText">Top bar text</label><input id="topText" maxlength="90">
+<div class="pair"><div><label for="subjectCode">Subject code</label><input id="subjectCode" maxlength="40"></div><div><label for="subjectTitle">Subject title</label><input id="subjectTitle" maxlength="90"></div></div>
+<div class="pair"><div><label for="startTime">Start time</label><input id="startTime" type="time"></div><div><label for="endTime">End time</label><input id="endTime" type="time"></div></div>
+<div class="section"><label class="reveal-switch" id="keySwitchRow" for="keyEnabled"><span class="reveal-copy"><strong>Show centre key</strong><small>Reveal the pre-entered key to students</small></span><input type="checkbox" id="keyEnabled" class="toggle-input"><span class="toggle-track" aria-hidden="true"></span></label>
+<div id="keyInputGroup"><label for="keyInput">Examination centre key (private until revealed)</label><input id="keyInput" placeholder="Enter centre key" maxlength="80" autocomplete="off" spellcheck="false"><p class="hint">In Presenter Mode, typing the key does not reveal it to students. Turn on “Show centre key” only when ready.</p></div>
+<div class="status" id="revealStatus"></div></div>
+<div class="section"><label class="reveal-switch" id="remarksSwitchRow" for="remarksEnabled"><span class="reveal-copy"><strong>Show remarks / errata</strong><small>Display a light-blue remarks panel on the right</small></span><input type="checkbox" id="remarksEnabled" class="toggle-input"><span class="toggle-track" aria-hidden="true"></span></label><label for="remarksHeader">Remarks heading (private until revealed)</label><input id="remarksHeader" maxlength="100" placeholder="e.g. ERRATA, REMARKS, IMPORTANT NOTICE"><label for="remarksInput">Remarks / errata (private until revealed)</label><textarea id="remarksInput" rows="7" placeholder="Enter remarks or errata here. Each new line will be preserved." spellcheck="true"></textarea><p class="hint">You can prepare remarks in advance. They will only appear on the projector when you enable the toggle.</p></div><div class="actions"><button class="action" id="closeEdit">Done</button></div>
+</section>
+<section class="panel" id="stylePanel" hidden aria-label="Appearance settings"><h2>Appearance settings</h2>
+<label for="fontChoice">Font family</label><select id="fontChoice"><option value="Franklin Gothic Medium">Franklin Gothic Medium (default)</option><option value="Segoe UI">Segoe UI</option><option value="Tahoma">Tahoma</option><option value="Bahnschrift">Bahnschrift</option></select>
+<div class="section"><strong>Font sizes</strong><p class="hint">Adjust each display independently. Presenter Mode has larger default text for TV projection.</p><div class="pair"><button type="button" class="action" id="laptopSizes">Laptop / current display</button><button type="button" class="action secondary" id="projectorSizes">Projector / presenter</button></div><div id="sizeControls"></div><p class="hint" id="sizeModeNote"></p></div>
+<div class="section"><strong>Colours</strong><div id="colorControls"></div></div>
+<div class="actions"><button class="action secondary" id="resetStyle">Reset appearance</button><button class="action" id="closeStyle">Done</button></div>
+<p class="hint">Franklin Gothic Medium is the default. Segoe UI, Tahoma and Bahnschrift are available as alternatives. The examination centre key always uses Consolas. Fonts must be installed on the displaying computer.</p></section>
+<div class="toast" id="toast" hidden></div>
+<div id="setupOverlay" class="setup-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="setupTitle"><div class="setup-card"><h2 id="setupTitle">Set up Presenter Mode</h2><p>Keep the controls on your laptop while students see only the examination display.</p><ol><li>Connect your projector or TV to your laptop.</li><li>Press <kbd>Win</kbd> + <kbd>P</kbd> and select <strong>Extend</strong> (not Duplicate).</li><li>Click <strong>Open presentation window</strong> below.</li><li>Drag the new window by its <strong>title bar</strong> onto the projector or TV.</li><li><strong>Double-click</strong> the display to enter full screen. Double-click again to exit. If necessary, use <kbd>F11</kbd>.</li></ol><p class="hint">The window opens in a movable size first, so you can place it on the correct screen. Browser security may prevent automatic full screen; double-clicking is the reliable shortcut.</p><div class="setup-actions"><button type="button" class="secondary" id="cancelSetup">Cancel</button><button type="button" id="launchPresentation">Open presentation window →</button></div><div class="presenter-status" id="presenterStatus" aria-live="polite"></div></div></div>
+<div class="project-help" id="projectHelp" hidden>Drag this window to the TV · Double-click to enter full screen</div>
+<script>
+(()=>{'use strict';
+const defaults={top:'JC1 PROMOTIONAL EXAM',code:'9569/02',subject:'H2 COMPUTING PAPER 2',start:'08:00',end:'10:30',key:'',showKey:false,remarks:'',showRemarks:false,remarksHeader:'REMARKS / ERRATA',font:'Franklin Gothic Medium',sizes:{laptop:{headingSize:1,labelSize:0.82,timeSize:1,keySize:1,remarksSize:1},projector:{headingSize:1.12,labelSize:0.88,timeSize:1.08,keySize:1.12,remarksSize:1.12}},colors:{bg:'#121212',heading:'#ffbf00',top:'#00a3a7',start:'#60ff60',end:'#FA8128',time:'#ffffff',divider:'#a9bfb5',keybg:'#006b69',keytext:'#d8d5c9'}};
+const STORE='exam-display-config-v3';const isDisplay=new URLSearchParams(location.search).has('display');const $=id=>document.getElementById(id);const clone=x=>JSON.parse(JSON.stringify(x));let state=clone(defaults);let popup=null;let channel=null;let toastTimer;let sizeTarget='laptop';
+function validState(s){if(!s||typeof s!=='object')return clone(defaults);return {...clone(defaults),...s,sizes:{laptop:{...defaults.sizes.laptop,...(s.sizes?.laptop||{})},projector:{...defaults.sizes.projector,...(s.sizes?.projector||{})}},colors:{...defaults.colors,...(s.colors||{})}}}
+try{const saved=localStorage.getItem(STORE);if(saved){state=validState(JSON.parse(saved));if(!['Franklin Gothic Medium','Segoe UI','Tahoma','Bahnschrift'].includes(state.font))state.font=defaults.font;if(state.sizes.laptop.labelSize===1)state.sizes.laptop.labelSize=defaults.sizes.laptop.labelSize;if(state.sizes.projector.labelSize===1.08)state.sizes.projector.labelSize=defaults.sizes.projector.labelSize;}else {const old=localStorage.getItem('exam-display-config-v2')||localStorage.getItem('exam-display-config-v1');if(old){const prev=JSON.parse(old);state=validState(prev);if(!['Franklin Gothic Medium','Segoe UI','Tahoma','Bahnschrift'].includes(state.font))state.font=defaults.font;for(const k of Object.keys(defaults.sizes.laptop)){if(typeof prev[k]==='number')state.sizes.laptop[k]=prev[k]}}}}catch(e){}
+try{channel=new BroadcastChannel('exam-display-sync-v1');channel.onmessage=e=>receive(e.data)}catch(e){}
+function notify(){if(isDisplay)return;try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){};send({type:'state',state})}
+function send(message){try{channel?.postMessage(message)}catch(e){};try{if(isDisplay)window.opener?.postMessage(message,'*');else if(popup&&!popup.closed)popup.postMessage(message,'*')}catch(e){}}
+function receive(msg){if(!msg||typeof msg!=='object')return;if(msg.type==='request'&&!isDisplay)send({type:'state',state});if(msg.type==='state'&&isDisplay){state=validState(msg.state);render()}}
+window.addEventListener('message',e=>{if(isDisplay&&e.source!==window.opener)return;if(!isDisplay&&popup&&e.source!==popup)return;receive(e.data)});
+window.addEventListener('storage',e=>{if(e.key===STORE&&e.newValue){try{state=validState(JSON.parse(e.newValue));render();if(!isDisplay)fillInputs()}catch(err){}}});
+function timeParts(s){const m=/^(\d{1,2}):(\d{2})$/.exec(s||'');return m?[m[1].padStart(2,'0'),m[2]]:['--','--']}
+function render(){const r=document.documentElement.style;for(const [k,v]of Object.entries(state.colors))r.setProperty('--'+k,v);r.setProperty('--font',`'${state.font.replace(/['"\\]/g,'')}', 'Franklin Gothic Medium', sans-serif`);for(const key of ['headingSize','labelSize','timeSize','keySize','remarksSize'])r.setProperty('--'+key,String(state.sizes[isDisplay?'projector':'laptop'][key]));$('standardHeader').hidden=!!state.showKey;$('keyHeader').hidden=!state.showKey;$('viewTop').textContent=state.top;$('viewCode').textContent=state.code;$('viewSubject').textContent=state.subject;$('keyCode').textContent=state.code;$('keySubject').textContent=state.subject;$('viewKey').textContent=state.showKey?state.key:'';$('displayLayout').classList.toggle('split',!!state.showRemarks);$('remarksPane').hidden=!state.showRemarks;$('viewRemarks').textContent=state.showRemarks?state.remarks:'';$('viewRemarksHeading').textContent=state.remarksHeader||'REMARKS / ERRATA';if(!isDisplay){$('keySwitchRow').classList.toggle('enabled',!!state.showKey);$('remarksSwitchRow').classList.toggle('enabled',!!state.showRemarks)}const a=timeParts(state.start),b=timeParts(state.end);$('startHour').textContent=a[0];$('startMinute').textContent=a[1];$('endHour').textContent=b[0];$('endMinute').textContent=b[1];if(!isDisplay)$('revealStatus').textContent=state.showKey?'Centre key is VISIBLE on the examination display.':'Centre key is HIDDEN from the examination display.'}
+function update(){render();notify()}
+const fields={topText:'top',subjectCode:'code',subjectTitle:'subject',startTime:'start',endTime:'end',keyInput:'key',keyEnabled:'showKey',remarksInput:'remarks',remarksHeader:'remarksHeader',remarksEnabled:'showRemarks'};
+function fillInputs(){for(const [id,key]of Object.entries(fields)){if(id==='keyEnabled'||id==='remarksEnabled')$(id).checked=!!state[key];else $(id).value=state[key]||''}$('fontChoice').value=state.font;refreshSizeInputs();for(const key of Object.keys(defaults.colors)){const el=$('color_'+key);if(el)el.value=state.colors[key]}}
+for(const [id,key]of Object.entries(fields))$(id).addEventListener((id==='keyEnabled'||id==='remarksEnabled')?'change':'input',e=>{state[key]=(id==='keyEnabled'||id==='remarksEnabled')?e.target.checked:e.target.value;update()});
+const sizes={headingSize:'Heading / subject',labelSize:'START / END labels',timeSize:'Time values',keySize:'Centre key',remarksSize:'Remarks / errata text'};for(const [key,label]of Object.entries(sizes)){const div=document.createElement('div');div.innerHTML=`<div class="rangehead"><label for="size_${key}">${label}</label><span id="sizeValue_${key}">100%</span></div><input type="range" id="size_${key}" min="0.45" max="1.7" step="0.05">`;$('sizeControls').append(div);$('size_'+key).addEventListener('input',e=>{state.sizes[sizeTarget][key]=Number(e.target.value);$('sizeValue_'+key).textContent=Math.round(state.sizes[sizeTarget][key]*100)+'%';update()})}
+function refreshSizeInputs(){for(const key of Object.keys(sizes)){const v=state.sizes[sizeTarget][key];$('size_'+key).value=v;$('sizeValue_'+key).textContent=Math.round(v*100)+'%'}$('sizeModeNote').textContent=sizeTarget==='laptop'?'Editing sizes for the current laptop display.':'Editing sizes for the separate projector window.';$('laptopSizes').classList.toggle('secondary',sizeTarget!=='laptop');$('projectorSizes').classList.toggle('secondary',sizeTarget!=='projector')}
+$('laptopSizes').onclick=()=>{sizeTarget='laptop';refreshSizeInputs()};$('projectorSizes').onclick=()=>{sizeTarget='projector';refreshSizeInputs()};
+const colors={bg:'Background',heading:'Yellow heading',top:'Top bar text',start:'START label',end:'END label',time:'Time values',divider:'Divider',keybg:'Centre key background',keytext:'Centre key text'};for(const [key,label]of Object.entries(colors)){const div=document.createElement('div');div.className='colorrow';const l=document.createElement('label');l.htmlFor='color_'+key;l.textContent=label;const input=document.createElement('input');input.type='color';input.id='color_'+key;input.addEventListener('input',e=>{state.colors[key]=e.target.value;update()});div.append(l,input);$('colorControls').append(div)}
+$('fontChoice').addEventListener('change',e=>{state.font=e.target.value;update()});
+$('resetStyle').addEventListener('click',()=>{state.font=defaults.font;state.sizes=clone(defaults.sizes);state.colors=clone(defaults.colors);fillInputs();refreshSizeInputs();update()});
+function panel(id){const el=$(id);const show=el.hidden;$('editPanel').hidden=true;$('stylePanel').hidden=true;el.hidden=!show;if(show)fillInputs()}
+$('editBtn').onclick=()=>panel('editPanel');$('styleBtn').onclick=()=>panel('stylePanel');$('closeEdit').onclick=()=>$('editPanel').hidden=true;$('closeStyle').onclick=()=>$('stylePanel').hidden=true;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('editPanel').hidden=true;$('stylePanel').hidden=true}});
+function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4500)}
+$('fullBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){toast('Full screen was blocked. Try F11 or use the browser full-screen control.')}};
+$('projectFull').onclick=async()=>{try{await document.documentElement.requestFullscreen()}catch(e){toast('Press F11 to hide browser title bars.')}};
+function updatePresenterButton(){const active=popup&&!popup.closed;$('presentBtn').title=active?'Close presenter display':'Open presenter display';$('presentBtn').setAttribute('aria-label',$('presentBtn').title);$('presentBtn').style.borderColor=active?'#31c7bc':''}
+$('presentBtn').onclick=()=>{if(popup&&!popup.closed){const closeIt=confirm('Close the presentation window on the projector?');if(closeIt){popup.close();popup=null;updatePresenterButton();toast('Presenter Mode closed.')}return}$('setupOverlay').hidden=false;$('presenterStatus').textContent=''};
+$('cancelSetup').onclick=()=>$('setupOverlay').hidden=true;
+$('setupOverlay').addEventListener('click',e=>{if(e.target===$('setupOverlay'))$('setupOverlay').hidden=true});
+$('launchPresentation').onclick=()=>{const url=new URL(location.href);url.searchParams.set('display','1');popup=window.open(url.href,'ExamPresentation','popup=yes,toolbar=yes,location=yes,menubar=no,status=no,scrollbars=yes,width=1050,height=680,left=120,top=120');if(!popup){$('presenterStatus').textContent='Pop-up blocked. Allow pop-ups for this HTML file and try again.';return}$('setupOverlay').hidden=true;popup.focus();setTimeout(()=>send({type:'state',state}),350);updatePresenterButton();toast('Drag the new window to the TV, then double-click to go full screen.');};
+window.addEventListener('focus',updatePresenterButton);
+if(isDisplay){
+  // Double-click anywhere on the projected screen to toggle browser full screen.
+  document.addEventListener('dblclick',async e=>{
+    if(e.target.closest('button, input, select, textarea'))return;
+    try{
+      if(document.fullscreenElement)await document.exitFullscreen();
+      else await document.documentElement.requestFullscreen();
+    }catch(err){toast('Full screen was blocked. Use F11 if necessary.');}
+  });
+  document.body.classList.add('projected');$('toolbar').hidden=true;$('projectHelp').hidden=false;setTimeout(()=>{$('projectHelp').hidden=true},120000);window.addEventListener('load',()=>{send({type:'request'});setTimeout(()=>send({type:'request'}),500)})}else{fillInputs();refreshSizeInputs()}
+render();
+})();
+</script>
+</body>
+</html>
